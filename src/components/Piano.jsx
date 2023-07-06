@@ -51,9 +51,40 @@ import audioG5Sharp from '../assets/Volume/G5Sharp.mp3'
 export default function Piano(){
 
     const [pressedKey, setPressedKey] = useState([])
-    const [settings, setSettings] = useState(true)
+    const [settings, setSettings] = useState(false)
     const [mute, setMute] = useState(false)
     const [volume, setVolume] = useState(1.0)
+
+    const [record, setRecord] = useState(false)
+    const [emptyArray, setEmptyArray] = useState([
+        {key: 'o', delay: 480},
+        {key: 9, delay: 840},
+        {key: 'o', delay: 1104},
+        {key: 'p', delay: 1904},
+        {key: 'o', delay: 2352},
+        {key: 'y', delay: 2720},
+        {key: 't', delay: 3416},
+        {key: 'r', delay: 3800},
+        {key: 't', delay: 4072},
+        {key: 'y', delay: 4504},
+        {key: 9, delay: 5048},
+        {key: 'o', delay: 5536},
+        {key: 'o', delay: 5840},
+        {key: 'p', delay: 6768},
+        {key: 9, delay: 7160},
+        {key: 'o', delay: 7424},
+        {key: 'p', delay: 8432},
+        {key: 'o', delay: 9048},
+        {key: 'y', delay: 9640},
+        {key: 'y', delay: 10944},
+        {key: 'y', delay: 11424},
+        {key: 'p', delay: 12120},
+        {key: '[', delay: 12568},
+        {key: 'z', delay: 12864},
+        {key: '[', delay: 13368},
+        {key: '[', delay: 13808}
+    ])
+    const [startTime, setStartTime] = useState(new Date())
 
     const notes = [
         'F2',
@@ -249,17 +280,19 @@ export default function Piano(){
           document.removeEventListener('keydown', handleKeyPress);
           document.removeEventListener('keyup', handleKeyUp);
         };
-      }, [volume, mute, keyToNote]);
+      }, [volume, mute, keyToNote, record, emptyArray]);
 
     function handleKeyPress(e) {
         if (e.repeat) {
             return;
           }
-        console.log(e.key)
+        // console.log(e.key)
         playNote(keyToNote[e.key.toLowerCase()])
+
     }
 
     function handleKeyUp(e) {
+        console.log(emptyArray)
         setPressedKey((prevKeys) => 
             prevKeys.filter((key) => 
                 key !== keyToNote[e.key.toLowerCase()]));
@@ -269,6 +302,10 @@ export default function Piano(){
         const audio = new Audio(audioFiles[note]);
         audio.volume = mute ? 0 : volume;
         audio.play();
+        if (record) {
+            const newCurrentTime = new Date();
+            setEmptyArray([...emptyArray, {key: noteToKey[note], delay: newCurrentTime - startTime}]);
+        }
         setPressedKey((prevKeys) =>
             [...prevKeys, note]
         )
@@ -299,7 +336,6 @@ export default function Piano(){
 
     
     function handleInputChange(event){
-
         const updatedNoteToKey = {
             ...noteToKey,
             [event.target.name]: event.target.value,
@@ -360,6 +396,52 @@ export default function Piano(){
             )
         }
     })
+    
+    let playSongArray = ["o",9,"o"]
+    let delays = [0, 500, 800]
+
+    function keyDownEventFunc(key){
+        const keyDown = new KeyboardEvent("keydown", {
+            key: key
+        })
+        document.dispatchEvent(keyDown)
+        const keyUp = new KeyboardEvent("keyup", {
+            key: key
+        })
+        setTimeout(() =>{
+            document.dispatchEvent(keyUp)
+        }, 200)
+    }
+      
+    function playSong(){
+        for (let i = 0; i < emptyArray.length; i++){
+            const {key, delay} = emptyArray[i]
+            setTimeout(()=>{
+                keyDownEventFunc(key)
+            }, delay);
+        }
+    }
+
+    function resetSong(){
+        setEmptyArray([])
+    }
+
+    function recordSong(){
+        setRecord((prevState) => !prevState)
+        setStartTime(new Date())
+    }
+
+    const [showRecording, setShowRecording] = useState(false)
+
+    function toggleRecording(){
+        setShowRecording((prevState) => !prevState)
+    }
+
+    const [recordingLog, setRecordingLog] = useState([]);
+
+    useEffect(() =>{
+        setRecordingLog(emptyArray);
+    }, [emptyArray])
 
     return(
          <div className="piano">
@@ -368,7 +450,11 @@ export default function Piano(){
             </div>
             <div className="piano-settings">
                 <button onClick={settingsToggle}>Settings</button>
-                {!settings &&
+                <button className="play-button" onClick={playSong}>Play</button>
+                <button className="play-button" onClick={recordSong}>Record</button>
+                <button className="play-button" onClick={resetSong}>Reset</button>
+                <button className="play-button" onClick={toggleRecording}>Show Recording</button>
+                {settings &&
                 <div className="settings-page">
                     <div className="settings-page-title">
                         Settings Page
@@ -410,7 +496,19 @@ export default function Piano(){
 
                 </div>
                 }
+                {showRecording &&
+                    <div className="recording-log">
+                    {recordingLog.map((noteObj, index) => (
+                        <div key={index}>
+                            {noteObj.key}
+                        </div>
+                    ))}
+                    </div>
+                }
             </div>
+            {record && 
+                <div className="record-text">(Recording in progress)</div>
+            }
 
             <div className="piano-keys">
                 {keys}

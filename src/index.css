@@ -12,10 +12,6 @@
   border: 2px solid black;
 }
 
-.piano{
-  height: 100vh;
-
-}
 
 .piano-title{
   display: flex;
@@ -35,7 +31,6 @@
   margin: 100px 0px auto auto;
 }
 
-
 .piano::before {
   content: "";
   display: block;
@@ -46,8 +41,6 @@
   height: 100%;
   background-image: url(./assets/main-background.jpg);
   background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
   opacity: 0.7; /* adjust the opacity as needed */
   z-index: -1;
 }
@@ -93,6 +86,14 @@
   border-radius: 10px;
 }
 
+.play-button{
+  margin-left: 20px;
+}
+
+.piano-settings button:hover{
+  background-color:aquamarine;
+}
+
 .settings-page{
   position: absolute;
   display: flex;
@@ -111,6 +112,18 @@
   border-radius: 10px;
 }
 
+.recording-log{
+  position: absolute;
+  display: flex;
+  margin: auto;
+  top: 2%;
+  right: 2%;
+  height: 120px;
+  width: 200px;
+  border: 1px solid rgb(214, 204, 204);
+  background: rgb(238, 209, 83);
+}
+
 .settings-page-title{
   font-size: 1.5rem;
   margin-top: 20px;
@@ -120,6 +133,10 @@
 .settings-page-title img{
   position: absolute;
   right: 15%
+}
+
+.settings-page-title img:hover{
+  scale: 1.2;
 }
 
 .settings-page-content{
@@ -161,4 +178,17 @@
   position: relative;
   top: 45%;
   left: -30%;
+}
+
+.record-text{
+  color: red;
+  margin-top: 20px;
+  background: white;
+  border: 1px solid black;
+  border-radius: 10px;;
+  width: fit-content;
+  padding: 3px 10px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
