@@ -192,3 +192,20 @@
   left: 50%;
   transform: translateX(-50%);
 }
+
+.key-checkbox{
+  margin-top: 20px;
+  font-size: 1.4rem;
+  display: flex;
+  justify-content: center;
+  border: 1px solid grey;
+  background: white;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 3px 20px;
+}
+
+.key-checkbox label{
+  padding: 0px 5px;
+}

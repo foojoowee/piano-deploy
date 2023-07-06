@@ -57,32 +57,61 @@ export default function Piano(){
 
     const [record, setRecord] = useState(false)
     const [emptyArray, setEmptyArray] = useState([
-        {key: 'o', delay: 480},
-        {key: 9, delay: 840},
-        {key: 'o', delay: 1104},
-        {key: 'p', delay: 1904},
-        {key: 'o', delay: 2352},
-        {key: 'y', delay: 2720},
-        {key: 't', delay: 3416},
-        {key: 'r', delay: 3800},
-        {key: 't', delay: 4072},
-        {key: 'y', delay: 4504},
-        {key: 9, delay: 5048},
-        {key: 'o', delay: 5536},
-        {key: 'o', delay: 5840},
-        {key: 'p', delay: 6768},
-        {key: 9, delay: 7160},
-        {key: 'o', delay: 7424},
-        {key: 'p', delay: 8432},
-        {key: 'o', delay: 9048},
-        {key: 'y', delay: 9640},
-        {key: 'y', delay: 10944},
-        {key: 'y', delay: 11424},
-        {key: 'p', delay: 12120},
-        {key: '[', delay: 12568},
-        {key: 'z', delay: 12864},
-        {key: '[', delay: 13368},
-        {key: '[', delay: 13808}
+        {key: 'b', delay: 584},
+        {key: 'g', delay: 1024},
+        {key: 'b', delay: 1281},
+        {key: 'n', delay: 2160},
+        {key: 'b', delay: 2608},
+        {key: 'x', delay: 2961},
+        {key: 'z', delay: 3776},
+        {key: '[', delay: 4145},
+        {key: 'z', delay: 4352},
+        {key: 'x', delay: 4752}, 
+        {key: 'g', delay: 5176}, 
+        {key: 'b', delay: 5592}, 
+        {key: 'b', delay: 5792}, 
+        {key: 'n', delay: 6704}, 
+        {key: 'g', delay: 7089}, 
+        {key: 'b', delay: 7328}, 
+        {key: 'n', delay: 8224}, 
+        {key: 'b', delay: 8640}, 
+        {key: 'x', delay: 8929}, 
+        {key: 'x', delay: 9825}, 
+        {key: 'x', delay: 10224}, 
+        {key: 'n', delay: 10584}, 
+        {key: 'm', delay: 10920}, 
+        {key: ',', delay: 11184}, 
+        {key: 'm', delay: 11632}, 
+        {key: 'm', delay: 11904}, 
+        {key: 'c', delay: 13289}, 
+        {key: 'g', delay: 13592}, 
+        {key: 'b', delay: 14233}, 
+        {key: 'g', delay: 14481}, 
+        {key: 'c', delay: 15033}, 
+        {key: 'x', delay: 15281}, 
+        {key: '[', delay: 15912}, 
+        {key: 'p', delay: 16312}, 
+        {key: 'o', delay: 16785}, 
+        {key: 'p', delay: 17912}, 
+        {key: '[', delay: 18353}, 
+        {key: 'z', delay: 18656}, 
+        {key: 'x', delay: 18952}, 
+        {key: 'z', delay: 19432}, 
+        {key: '[', delay: 19808}, 
+        {key: '[', delay: 20152}, 
+        {key: 'p', delay: 21056}, 
+        {key: 'o', delay: 21513}, 
+        {key: 'x', delay: 22336}, 
+        {key: 'o', delay: 22784}, 
+        {key: 'g', delay: 23584}, 
+        {key: 'b', delay: 24080}, 
+        {key: 'n', delay: 24769}, 
+        {key: 'b', delay: 25281}, 
+        {key: 'd', delay: 26136}, 
+        {key: 'x', delay: 26920}, 
+        {key: 'z', delay: 27416}, 
+        {key: 'x', delay: 27800}, 
+        {key: '[', delay: 28249},
     ])
     const [startTime, setStartTime] = useState(new Date())
 
@@ -127,6 +156,12 @@ export default function Piano(){
         'D5#',
         'E5',
     ]
+
+    const [isChecked, setIsChecked] = useState(true)
+
+    function toggleCheckBox(){
+        setIsChecked((prevState)=>!prevState)
+    }
 
     function settingsToggle(){
         setSettings((prevState) => !prevState)
@@ -330,6 +365,7 @@ export default function Piano(){
                 playNote={playNote}
                 isPressed={isPressed}
                 releaseNote={releaseNote}
+                isChecked={isChecked}
             />
         )
     })
@@ -439,6 +475,7 @@ export default function Piano(){
 
     const [recordingLog, setRecordingLog] = useState([]);
 
+
     useEffect(() =>{
         setRecordingLog(emptyArray);
     }, [emptyArray])
@@ -451,9 +488,9 @@ export default function Piano(){
             <div className="piano-settings">
                 <button onClick={settingsToggle}>Settings</button>
                 <button className="play-button" onClick={playSong}>Play</button>
-                <button className="play-button" onClick={recordSong}>Record</button>
+                <button className="play-button" onClick={recordSong}>{record ? "Stop Recording" : "Record" }</button>
                 <button className="play-button" onClick={resetSong}>Reset</button>
-                <button className="play-button" onClick={toggleRecording}>Show Recording</button>
+                {/* <button className="play-button" onClick={toggleRecording}>Show Recording</button> */}
                 {settings &&
                 <div className="settings-page">
                     <div className="settings-page-title">
@@ -512,6 +549,15 @@ export default function Piano(){
 
             <div className="piano-keys">
                 {keys}
+            </div>
+            <div className="key-checkbox">
+                <input 
+                    type="checkbox" 
+                    id="keyCheckbox" 
+                    checked={isChecked}
+                    onChange={toggleCheckBox}
+                />
+                <label htmlFor="keyCheckbox">Show Note on Key</label>
             </div>
          </div>
     )
